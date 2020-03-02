@@ -1,0 +1,169 @@
+<html>
+  <head>
+    <title>Co Workers - Homepage</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <script src="js/scripts.js"></script>
+    <script>
+      if (isLoggedIn()) {
+        if (!isOwner()) {
+          window.location.href = 'index.html';
+        }
+      } else {
+        window.location.href = 'index.html';
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <img
+        src="images/logo.png"
+        class="logo"
+        alt="co-workers logo | #WORKOUTSIDETHEBOX"
+      />
+      <nav id="navigation">
+        <a href="index.html">
+          Home
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h2>Your Properties</h2>
+        <table id="properties" cellpadding="20">
+          <th>Address</th>
+          <th>Neighborhood</th>
+          <th>Square Feet</th>
+          <th>Parking Garage</th>
+          <th>Accessible by Public Transport</th>
+          <th>Workspaces</th>
+          <th>Edit</th>
+        </table>
+      </section>
+    </main>
+
+    <footer>
+      &copy; 2020, co-workers.com | Designed & Developed by Nikita
+    </footer>
+    <script>
+      var email = JSON.parse(localStorage.getItem('user')).email;
+      var properties = JSON.parse(localStorage.getItem('properties'));
+
+      if (email && properties) {
+        myProperties = properties.filter(function(property) {
+          if (property.email === email) {
+            return property;
+          }
+        });
+        for (i = 0; i < myProperties.length; i++) {
+          var myProperty = myProperties[i];
+          var propertyTable = document.getElementById('properties');
+          var addressText = document.createTextNode(myProperty.address);
+          var neighborhoodText = document.createTextNode(
+            myProperty.neighborhood
+          );
+          var sqftText = document.createTextNode(myProperty.sqft);
+          var parkingText = document.createTextNode(
+            myProperty.parking ? 'Yes' : 'No'
+          );
+          var transportationText = document.createTextNode(
+            myProperty.transportation ? 'Yes' : 'No'
+          );
+          var addressNode = document.createElement('td');
+          var neighborhoodNode = document.createElement('td');
+          var sqftNode = document.createElement('td');
+          var parkingNode = document.createElement('td');
+          var transportationNode = document.createElement('td');
+          var workspacesNode = document.createElement('td');
+          var editLinkNode = document.createElement('td');
+          var listingBtnNode = document.createElement('td');
+          var row = document.createElement('tr');
+          addressNode.appendChild(addressText);
+          row.appendChild(addressNode);
+          neighborhoodNode.appendChild(neighborhoodText);
+          row.appendChild(neighborhoodNode);
+          sqftNode.appendChild(sqftText);
+          row.appendChild(sqftNode);
+          parkingNode.appendChild(parkingText);
+          row.appendChild(parkingNode);
+          transportationNode.appendChild(transportationText);
+          row.appendChild(transportationNode);
+
+          var viewLink = document.createElement('a');
+
+          var viewLinkText = document.createTextNode('View');
+
+          viewLink.setAttribute(
+            'href',
+            'my-workspaces.html?id=' + myProperty.id
+          );
+          viewLink.appendChild(viewLinkText);
+
+          var addLink = document.createElement('a');
+          var addLinkText = document.createTextNode('Add');
+          addLink.setAttribute(
+            'href',
+            'add-workspace.html?id=' + myProperty.id
+          );
+          addLink.setAttribute('style', 'margin-left: 15px;');
+
+          workspacesNode.appendChild(viewLink);
+          workspacesNode.appendChild(addLink);
+          addLink.appendChild(addLinkText);
+          row.appendChild(workspacesNode);
+
+          var editLink = document.createElement('a');
+          var editLinkText = document.createTextNode('Edit');
+          editLink.setAttribute(
+            'href',
+            `edit-property.html?id=${myProperty.id}&address=${myProperty.address}&neighborhood=${myProperty.neighborhood}&sqft=${myProperty.sqft}&parking=${myProperty.parking}&transportation=${myProperty.transportation}&visibility=${myProperty.visibility}`
+          );
+          editLink.appendChild(editLinkText);
+          editLinkNode.appendChild(editLink);
+          row.appendChild(editLinkNode);
+
+          var listingBtn = document.createElement('button');
+          var listingBtnText = document.createTextNode(
+            myProperty.visibility.toString() == 'true' ? 'Un-list' : 'List'
+          );
+          listingBtn.setAttribute(
+            'onClick',
+            `handleListing(${myProperty.id}, ${myProperty.visibility})`
+          );
+          listingBtn.setAttribute(
+            'style',
+            `cursor: pointer; background: ${
+              myProperty.visibility.toString() == 'true' ? '#ff7070' : '#00d191'
+            }`
+          );
+          console.log(myProperty.visibility);
+          listingBtn.appendChild(listingBtnText);
+          listingBtnNode.appendChild(listingBtn);
+          row.appendChild(listingBtnNode);
+
+          propertyTable.appendChild(row);
+        }
+
+        function handleListing(propertyId, visibility) {
+          var properties = JSON.parse(localStorage.getItem('properties'));
+          var workspaces = JSON.parse(localStorage.getItem('workspaces'));
+          for (i = 0; i < properties.length; i++) {
+            if (properties[i].id == propertyId) {
+              properties[i].visibility = !Boolean(visibility);
+              success = true;
+              break;
+            }
+          }
+          for (i = 0; i < workspaces.length; i++) {
+            if (workspaces[i].propertyId == propertyId) {
+              workspaces[i].visibility = !visibility;
+            }
+          }
+          localStorage.setItem('workspaces', JSON.stringify(workspaces));
+          localStorage.setItem('properties', JSON.stringify(properties));
+          window.location.href = 'my-properties.html';
+        }
+      }
+    </script>
+  </body>
+</html>

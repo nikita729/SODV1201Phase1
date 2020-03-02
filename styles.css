@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+/* #5e5e5e - gray */
+/* #00d191 - green */
+* {
+  font-family: Poppins;
+}
+
+body {
+  margin: 0;
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #000;
+}
+
+.logo {
+  width: 230px;
+  margin: 25px;
+}
+
+nav {
+  background-color: #00d191;
+  display: flex;
+  width: 100%;
+  padding: 10px 0;
+}
+
+nav a {
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 10px 15px;
+  color: #000;
+  border-radius: 6px;
+  margin: 0 10px;
+}
+
+nav a:hover {
+  color: #5e5e5e;
+}
+
+footer {
+  text-align: center;
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  padding: 25px 0;
+}
+
+h2 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+main {
+  flex-grow: 1;
+  margin-bottom: 30px;
+}
+
+section.home p {
+  color: gray;
+  font-size: 0.9rem;
+  width: 60%;
+  margin: 0 auto;
+  text-align: justify;
+  line-height: 35px;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'] {
+  border: 1px solid silver;
+  border-radius: 6px;
+  padding: 5px;
+  width: 200px;
+}
+
+form {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+form label {
+  font-size: 0.7rem;
+  color: gray;
+}
+
+input:focus {
+  outline: none;
+  border-color: #00d191;
+}
+
+form > div > div {
+  display: flex;
+  align-items: center;
+}
+
+form > div > div > input {
+  margin-right: 8px;
+}
+
+form > div > div > input:last-child {
+  margin-left: 20px;
+}
+
+form > div:last-child {
+  flex-direction: row;
+  justify-content: space-between;
+  flex-grow: 1;
+  width: 200px;
+}
+
+button {
+  outline: none;
+  border: none;
+  background-color: #00d191;
+  color: #fff;
+  height: 30px;
+  width: 80px;
+  border-radius: 6px;
+}
+
+button.standard {
+  outline: none;
+  border: none;
+  background-color: #e6e6e6;
+  color: #000;
+  height: 30px;
+  width: 80px;
+  border-radius: 6px;
+}
+
+.active {
+  color: #5e5e5e;
+}
+
+table {
+  margin: 0 auto;
+}
+
+th,
+td {
+  text-align: center;
+}
+
+.workspace {
+  text-align: center;
+}
+.workspace p {
+  font-size: 0.8rem;
+}

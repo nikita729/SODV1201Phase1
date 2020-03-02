@@ -1,0 +1,195 @@
+<html>
+  <head>
+    <title>Co Workers - Homepage</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <script src="js/scripts.js"></script>
+    <script>
+      if (isLoggedIn()) {
+        if (!isCoWorker()) {
+          window.location.href = 'index.html';
+        }
+      } else {
+        window.location.href = 'index.html';
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <img
+        src="images/logo.png"
+        class="logo"
+        alt="co-workers logo | #WORKOUTSIDETHEBOX"
+      />
+      <nav id="navigation">
+        <a href="index.html">
+          Home
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="workspace">
+        <h2>Workspace Details</h2>
+
+        <div id="workspace-details"></div>
+        <hr />
+        <h3>Property Details</h3>
+        <div id="property-details"></div>
+        <hr />
+        <h3>Owner Details</h3>
+        <div id="owner-details"></div>
+      </section>
+    </main>
+
+    <footer>
+      &copy; 2020, co-workers.com | Designed & Developed by Nikita
+    </footer>
+  </body>
+  <script>
+    var urlParams = new URLSearchParams(window.location.search);
+    var workspaceId = urlParams.get('workspaceId');
+    var propertyId = urlParams.get('propertyId');
+
+    var workspaces = JSON.parse(localStorage.getItem('workspaces'));
+    var properties = JSON.parse(localStorage.getItem('properties'));
+    var users = JSON.parse(localStorage.getItem('users'));
+
+    var workspaceDetails = workspaces.filter(function(workspace) {
+      if (workspace.id == workspaceId) {
+        return workspace;
+      }
+    });
+    var propertyDetails = properties.filter(function(property) {
+      if (property.id == propertyId) {
+        return property;
+      }
+    });
+
+    var userDetails = users.filter(function(user) {
+      if (user.email == propertyDetails[0].email) {
+        delete user.password;
+        return user;
+      }
+    });
+
+    var workspaceNode = document.getElementById('workspace-details');
+    var nameNode = document.createElement('p');
+    var typeNode = document.createElement('p');
+    var seatingNode = document.createElement('p');
+    var availibilityNode = document.createElement('p');
+    var leaseNode = document.createElement('p');
+    var priceNode = document.createElement('p');
+    var smokingNode = document.createElement('p');
+
+    var nameTextNode = document.createTextNode(
+      'Name: ' + workspaceDetails[0].name
+    );
+    var typeTextNode = document.createTextNode(
+      'Type: ' + workspaceDetails[0].type
+    );
+    var seatingTextNode = document.createTextNode(
+      'Seating: ' + workspaceDetails[0].seating
+    );
+    var availibilityTextNode = document.createTextNode(
+      'Availibility Date: ' + workspaceDetails[0].availibility
+    );
+    var leaseTextNode = document.createTextNode(
+      `Lease: ${workspaceDetails[0].leaseTerm} ${
+        workspaceDetails[0].leaseType
+      }${parseInt(workspaceDetails[0].leaseTerm) > 1 ? 's' : ''}`
+    );
+    var priceTextNode = document.createTextNode(
+      'Price: ' + workspaceDetails[0].price
+    );
+    var smokingTextNode = document.createTextNode(
+      `Smoking: ${
+        workspaceDetails[0].smoking == 'true' ? 'Allowed' : 'Not Allowed'
+      }`
+    );
+
+    nameNode.appendChild(nameTextNode);
+    workspaceNode.appendChild(nameNode);
+
+    typeNode.appendChild(typeTextNode);
+    workspaceNode.appendChild(typeNode);
+
+    seatingNode.appendChild(seatingTextNode);
+    workspaceNode.appendChild(seatingNode);
+
+    availibilityNode.appendChild(availibilityTextNode);
+    workspaceNode.appendChild(availibilityNode);
+
+    leaseNode.appendChild(leaseTextNode);
+    workspaceNode.appendChild(leaseNode);
+
+    priceNode.appendChild(priceTextNode);
+    workspaceNode.appendChild(priceNode);
+
+    smokingNode.appendChild(smokingTextNode);
+    workspaceNode.appendChild(smokingNode);
+
+    var propertyNode = document.getElementById('property-details');
+    var addressNode = document.createElement('p');
+    var neighborhoodNode = document.createElement('p');
+    var sqftNode = document.createElement('p');
+    var parkingNode = document.createElement('p');
+    var transportationNode = document.createElement('p');
+
+    var addressTextNode = document.createTextNode(
+      'Address: ' + propertyDetails[0].address
+    );
+    var neighborhoodTextNode = document.createTextNode(
+      'Neighborhood: ' + propertyDetails[0].neighborhood
+    );
+    var sqftTextNode = document.createTextNode(
+      'Square Feet: ' + propertyDetails[0].sqft
+    );
+    var parkingTextNode = document.createTextNode(
+      `Parking Garage:   ${propertyDetails[0].parking == true ? 'Yes' : 'No'}`
+    );
+    var transportationTextNode = document.createTextNode(
+      `Accessible to Public Transportation: ${
+        propertyDetails[0].transportation == true ? 'Yes' : 'No'
+      }`
+    );
+
+    addressNode.appendChild(addressTextNode);
+    propertyNode.appendChild(addressNode);
+
+    neighborhoodNode.appendChild(neighborhoodTextNode);
+    propertyNode.appendChild(neighborhoodNode);
+
+    sqftNode.appendChild(sqftTextNode);
+    propertyNode.appendChild(sqftNode);
+
+    parkingNode.appendChild(parkingTextNode);
+    propertyNode.appendChild(parkingNode);
+
+    transportationNode.appendChild(transportationTextNode);
+    propertyNode.appendChild(transportationNode);
+
+    var ownerNode = document.getElementById('owner-details');
+    var userNameNode = document.createElement('p');
+    var emailNode = document.createElement('p');
+    var phoneNumberNode = document.createElement('p');
+
+    var userNameTextNode = document.createTextNode(
+      'Name: ' + userDetails[0].name
+    );
+    var emailTextNode = document.createTextNode(
+      'Email: ' + userDetails[0].email
+    );
+    var phoneNumberTextNode = document.createTextNode(
+      'Phone Number: ' + userDetails[0].phoneNumber
+    );
+
+    userNameNode.appendChild(userNameTextNode);
+    ownerNode.appendChild(userNameNode);
+
+    emailNode.appendChild(emailTextNode);
+    ownerNode.appendChild(emailNode);
+
+    phoneNumberNode.appendChild(phoneNumberTextNode);
+    ownerNode.appendChild(phoneNumberNode);
+  </script>
+</html>

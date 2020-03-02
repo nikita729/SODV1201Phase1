@@ -1,0 +1,178 @@
+<html>
+  <head>
+    <title>Co Workers - Homepage</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <script src="js/scripts.js"></script>
+    <script>
+      if (isLoggedIn()) {
+        if (!isOwner()) {
+          window.location.href = 'index.html';
+        }
+      } else {
+        window.location.href = 'index.html';
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <img
+        src="images/logo.png"
+        class="logo"
+        alt="co-workers logo | #WORKOUTSIDETHEBOX"
+      />
+      <nav id="navigation">
+        <a href="index.html">
+          Home
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h2>Edit Property</h2>
+        <form onSubmit="updateProperty(event)">
+          <div>
+            <label for="address">Address</label>
+            <input
+              type="text"
+              name="address"
+              placeholder="Address"
+              id="property-address"
+            />
+          </div>
+          <div>
+            <label for="neighborhood">Neighborhood</label>
+            <input
+              type="text"
+              name="neighborhood"
+              placeholder="Neighborhood"
+              id="property-neighborhood"
+            />
+          </div>
+          <div>
+            <label for="square-feet">Square Feet</label>
+            <input
+              type="number"
+              name="square-feet"
+              placeholder="Square Feet"
+              id="property-square-feet"
+            />
+          </div>
+          <div style="width: 200px">
+            <div>
+              <input type="checkbox" name="parking" id="property-parking" />
+              <label for="parking">Parking Garage Availability</label>
+            </div>
+          </div>
+          <div style="width: 200px">
+            <div>
+              <input
+                type="checkbox"
+                name="transportation"
+                id="property-transportation"
+              />
+              <label for="transportation">Accessible by Public Transport</label>
+            </div>
+          </div>
+          <div style="width: 200px">
+            <div>
+              <input
+                type="checkbox"
+                name="visibility"
+                id="property-visibility"
+              />
+              <label for="visibility">Show workspaces in listings</label>
+            </div>
+          </div>
+          <div>
+            <button>Update</button>
+            <button class="standard">Reset</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      &copy; 2020, co-workers.com | Designed & Developed by Nikita
+    </footer>
+    <script>
+      var urlParams = new URLSearchParams(window.location.search);
+      var address = urlParams.get('address');
+      var neighborhood = urlParams.get('neighborhood');
+      var sqft = urlParams.get('sqft');
+      var parking = urlParams.get('parking');
+      var transportation = urlParams.get('transportation');
+      var visibility = urlParams.get('visibility');
+
+      var addressEl = document.getElementById('property-address');
+      var neighborhoodEl = document.getElementById('property-neighborhood');
+      var sqftEl = document.getElementById('property-square-feet');
+      var parkingEl = document.getElementById('property-parking');
+      var transportationEl = document.getElementById('property-transportation');
+      var visibilityEl = document.getElementById('property-visibility');
+
+      addressEl.value = address;
+      neighborhoodEl.value = neighborhood;
+      sqftEl.value = sqft;
+      parkingEl.checked = parking == 'true' ? true : false;
+      transportationEl.checked = transportation == 'true' ? true : false;
+      visibilityEl.checked = visibility == 'true' ? true : false;
+
+      function updateProperty(event) {
+        event.preventDefault();
+
+        var address = document.getElementById('property-address').value;
+        var neighborhood = document.getElementById('property-neighborhood')
+          .value;
+        var sqft = document.getElementById('property-square-feet').value;
+        var parking = document.getElementById('property-parking').checked;
+        var transportation = document.getElementById('property-transportation')
+          .checked;
+        var visibility = document.getElementById('property-visibility').checked;
+        if (address == '' || neighborhood == '' || sqft == '') {
+          alert('Please fill in all the text fields.');
+        } else {
+          var properties = JSON.parse(localStorage.getItem('properties'));
+          var email = JSON.parse(localStorage.getItem('user')).email;
+          var urlParams = new URLSearchParams(window.location.search);
+          var id = urlParams.get('id');
+          var success = false;
+          for (i = 0; i < properties.length; i++) {
+            if (properties[i].id == id) {
+              properties[i].address = address;
+              properties[i].neighborhood = neighborhood;
+              properties[i].sqft = sqft;
+              properties[i].parking = parking;
+              properties[i].transportation = transportation;
+              properties[i].visibility = visibility;
+              success = true;
+              break;
+            }
+          }
+
+          var urlParams = new URLSearchParams(window.location.search);
+          var currentVisibility = urlParams.get('visibility');
+          if (visibility.toString() != currentVisibility.toString()) {
+            var workspaces = JSON.parse(localStorage.getItem('workspaces'));
+            if (workspaces) {
+              console.log('Have');
+              for (i = 0; i < workspaces.length; i++) {
+                if (workspaces[i].propertyId == id) {
+                  workspaces[i].visibility = visibility;
+                }
+              }
+              console.log(workspaces);
+              localStorage.setItem('workspaces', JSON.stringify(workspaces));
+            }
+          }
+
+          if (success) {
+            localStorage.setItem('properties', JSON.stringify(properties));
+            alert('Property Updated Successfully.');
+            window.location.href = 'my-properties.html';
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

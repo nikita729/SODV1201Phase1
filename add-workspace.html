@@ -1,0 +1,227 @@
+<html>
+  <head>
+    <title>Co Workers - Homepage</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <script src="js/scripts.js"></script>
+    <script>
+      if (isLoggedIn()) {
+        if (!isOwner()) {
+          window.location.href = 'index.html';
+        }
+      } else {
+        window.location.href = 'index.html';
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <img
+        src="images/logo.png"
+        class="logo"
+        alt="co-workers logo | #WORKOUTSIDETHEBOX"
+      />
+      <nav id="navigation">
+        <a href="index.html">
+          Home
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h2>Add Workspace</h2>
+        <form onSubmit="addWorkspace(event)">
+          <div>
+            <label for="name">Workspace Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Workspace Name"
+              id="workspace-name"
+            />
+          </div>
+          <div>
+            <label for="type">Type</label>
+            <select
+              style="width: 200px; height: 28px; border: 1px solid silver; background: #fff;"
+              name="type"
+              id="workspace-type"
+            >
+              <option value="Meeting Room">Meeting Room</option>
+              <option value="Private Office Room">Private Office Room</option>
+              <option value="Open Area Desk">Open Area Desk</option>
+            </select>
+          </div>
+          <div>
+            <label for="seating-capacity">Seating Capacity</label>
+            <input
+              type="number"
+              name="seating-capacity"
+              placeholder="Seating Capacity"
+              id="workspace-seating-capacity"
+            />
+          </div>
+          <div>
+            <label for="availibility-date">Availibility Date</label>
+            <input
+              type="text"
+              name="availibility-date"
+              placeholder="Availibility Date [DD/MM/YYYY]"
+              id="workspace-availibility-date"
+            />
+          </div>
+          <div>
+            <label for="lease-term">Lease Term</label>
+            <div>
+              <input
+                type="number"
+                name="lease-term"
+                placeholder="Lease Term"
+                id="workspace-lease-term"
+                style="width: 120px"
+              />
+              <select
+                style="width: 70px; height: 28px; border: none; outline: none; background: #fff; border: 1px solid silver;"
+                name="lease-type"
+                id="workspace-lease-type"
+              >
+                <option value="Day">Day</option>
+                <option value="Month">Month</option>
+                <option value="Year">Year</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="price">Price</label>
+            <input
+              type="number"
+              name="price"
+              placeholder="Price"
+              id="workspace-price"
+            />
+          </div>
+          <div style="width: 200px">
+            <div>
+              <input type="checkbox" name="smoking" id="workspace-smoking" />
+              <label for="smoking">Smoking Allowance</label>
+            </div>
+          </div>
+          <div style="width: 200px">
+            <div>
+              <input
+                type="checkbox"
+                name="visibility"
+                id="workspace-visibility"
+              />
+              <label for="visibility">Show in listings</label>
+            </div>
+          </div>
+          <div>
+            <button>Add</button>
+            <button class="standard">Reset</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      &copy; 2020, co-workers.com | Designed & Developed by Nikita
+    </footer>
+
+    <script>
+      function addWorkspace(event) {
+        event.preventDefault();
+
+        console.log('Hey');
+
+        var name = document.getElementById('workspace-name').value;
+        var type = document.getElementById('workspace-type').value;
+        var seating = document.getElementById('workspace-seating-capacity')
+          .value;
+        var availibility = document.getElementById(
+          'workspace-availibility-date'
+        ).value;
+        var leaseTerm = document.getElementById('workspace-lease-term').value;
+        var leaseType = document.getElementById('workspace-lease-type').value;
+        var price = document.getElementById('workspace-price').value;
+        var smoking = document.getElementById('workspace-smoking').checked;
+        var visibility = document.getElementById('workspace-visibility')
+          .checked;
+
+        if (
+          name == '' ||
+          type == undefined ||
+          seating == '' ||
+          availibility == '' ||
+          leaseTerm == '' ||
+          leaseType == undefined ||
+          price == ''
+        ) {
+          alert('Please fill in all the fields.');
+        } else {
+          var dateRegex = new RegExp(
+            /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i
+          );
+          if (dateRegex.test(availibility)) {
+            var workspaceId = Math.floor(Math.random() * 1000000000);
+            var workspaces = JSON.parse(localStorage.getItem('workspaces'));
+            var urlParams = new URLSearchParams(window.location.search);
+            var id = urlParams.get('id');
+
+            var alreadyExist = [];
+            if (workspaces) {
+              alreadyExist = workspaces.filter(function(workspace) {
+                if (workspace.id === workspaceId) {
+                  return workspace;
+                }
+              });
+            }
+
+            if (alreadyExist.length > 0) {
+              alert('Something went wrong! Please try again.');
+            } else {
+              if (workspaces) {
+                workspaces.push({
+                  id: workspaceId,
+                  name,
+                  type,
+                  seating,
+                  availibility,
+                  leaseTerm,
+                  leaseType,
+                  price,
+                  smoking,
+                  visibility,
+                  propertyId: id
+                });
+              } else {
+                var workspaces = [
+                  {
+                    id: workspaceId,
+                    name,
+                    type,
+                    seating,
+                    availibility,
+                    leaseTerm,
+                    leaseType,
+                    price,
+                    smoking,
+                    visibility,
+                    propertyId: id
+                  }
+                ];
+              }
+              localStorage.setItem('workspaces', JSON.stringify(workspaces));
+              alert('Added workspace successfully');
+              window.location.href = 'my-workspaces.html?id=' + id;
+            }
+          } else {
+            alert(
+              'Invalid date format in availibility field. Should be [DD/MM/YYYY]'
+            );
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

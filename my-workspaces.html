@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <title>Co Workers - Homepage</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <script src="js/scripts.js"></script>
+    <script>
+      if (isLoggedIn()) {
+        if (!isOwner()) {
+          window.location.href = 'index.html';
+        }
+      } else {
+        window.location.href = 'index.html';
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <img
+        src="images/logo.png"
+        class="logo"
+        alt="co-workers logo | #WORKOUTSIDETHEBOX"
+      />
+      <nav id="navigation">
+        <a href="index.html">
+          Home
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h2>Your Workspaces</h2>
+        <table id="workspaces" cellpadding="20">
+          <th>Name</th>
+          <th>Type</th>
+          <th>Seating Capcity</th>
+          <th>Availibility</th>
+          <th>Lease Term</th>
+          <th>Price</th>
+          <th>Smoking</th>
+          <th>Edit</th>
+        </table>
+      </section>
+    </main>
+
+    <footer>
+      &copy; 2020, co-workers.com | Designed & Developed by Nikita
+    </footer>
+    <script>
+      var urlParams = new URLSearchParams(window.location.search);
+      var id = urlParams.get('id');
+      var workspaces = JSON.parse(localStorage.getItem('workspaces'));
+
+      if (workspaces) {
+        myWorkspaces = workspaces.filter(function(workspace) {
+          if (workspace.propertyId === id) {
+            return workspace;
+          }
+        });
+        for (i = 0; i < myWorkspaces.length; i++) {
+          var myWorkspace = myWorkspaces[i];
+          var workspaceTable = document.getElementById('workspaces');
+          var nameText = document.createTextNode(myWorkspace.name);
+          var typeText = document.createTextNode(myWorkspace.type);
+          var seatingText = document.createTextNode(myWorkspace.seating);
+          var availibilityText = document.createTextNode(
+            myWorkspace.availibility
+          );
+
+          var leaseText = document.createTextNode(`
+            ${myWorkspace.leaseTerm} ${myWorkspace.leaseType}${
+            parseInt(myWorkspace.leaseTerm) > 1 ? 's' : ''
+          }`);
+          var priceText = document.createTextNode(myWorkspace.price);
+          var smokingText = document.createTextNode(
+            myWorkspace.smoking ? 'Allowed' : 'Not Allowed'
+          );
+          var nameNode = document.createElement('td');
+          var typeNode = document.createElement('td');
+          var seatingNode = document.createElement('td');
+          var availibilityNode = document.createElement('td');
+          var leaseNode = document.createElement('td');
+          var priceNode = document.createElement('td');
+          var smokingNode = document.createElement('td');
+
+          var row = document.createElement('tr');
+          nameNode.appendChild(nameText);
+          row.appendChild(nameNode);
+          typeNode.appendChild(typeText);
+          row.appendChild(typeNode);
+          seatingNode.appendChild(seatingText);
+          row.appendChild(seatingNode);
+          availibilityNode.appendChild(availibilityText);
+          row.appendChild(availibilityNode);
+          leaseNode.appendChild(leaseText);
+          row.appendChild(leaseNode);
+          priceNode.appendChild(priceText);
+          row.appendChild(priceNode);
+          smokingNode.appendChild(smokingText);
+          row.appendChild(smokingNode);
+
+          var editLinkNode = document.createElement('td');
+          var editLink = document.createElement('a');
+          var editLinkText = document.createTextNode('Edit');
+          editLink.setAttribute(
+            'href',
+            `edit-workspace.html?workspaceId=${myWorkspace.id}&propertyId=${myWorkspace.propertyId}&name=${myWorkspace.name}&type=${myWorkspace.type}&seating=${myWorkspace.seating}&availibility=${myWorkspace.availibility}&leaseTerm=${myWorkspace.leaseTerm}&leaseType=${myWorkspace.leaseType}&price=${myWorkspace.price}&smoking=${myWorkspace.smoking}&visibility=${myWorkspace.visibility}`
+          );
+          editLink.appendChild(editLinkText);
+          editLinkNode.appendChild(editLink);
+          row.appendChild(editLinkNode);
+
+          var listingBtnNode = document.createElement('td');
+          var listingBtn = document.createElement('button');
+          var listingBtnText = document.createTextNode(
+            myWorkspace.visibility.toString() == 'true' ? 'Un-list' : 'List'
+          );
+          listingBtn.setAttribute(
+            'onClick',
+            `handleListing(${myWorkspace.id}, ${myWorkspace.visibility})`
+          );
+          listingBtn.setAttribute(
+            'style',
+            `cursor: pointer; background: ${
+              myWorkspace.visibility.toString() == 'true'
+                ? '#ff7070'
+                : '#00d191'
+            }`
+          );
+          listingBtn.appendChild(listingBtnText);
+          listingBtnNode.appendChild(listingBtn);
+          row.appendChild(listingBtnNode);
+
+          workspaceTable.appendChild(row);
+        }
+
+        function handleListing(workspaceId, visibility) {
+          var urlParams = new URLSearchParams(window.location.search);
+          var id = urlParams.get('id');
+          var workspaces = JSON.parse(localStorage.getItem('workspaces'));
+          for (i = 0; i < workspaces.length; i++) {
+            if (workspaces[i].id == workspaceId) {
+              workspaces[i].visibility = !Boolean(visibility);
+              success = true;
+              break;
+            }
+          }
+          localStorage.setItem('workspaces', JSON.stringify(workspaces));
+          window.location.href = 'my-workspaces.html?id=' + id;
+        }
+      }
+    </script>
+  </body>
+</html>

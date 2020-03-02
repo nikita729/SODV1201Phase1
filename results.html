@@ -1,0 +1,364 @@
+<html>
+  <head>
+    <title>Co Workers - Homepage</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <script src="js/scripts.js"></script>
+    <script>
+      if (isLoggedIn()) {
+        if (!isCoWorker()) {
+          window.location.href = 'index.html';
+        }
+      } else {
+        window.location.href = 'index.html';
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <img
+        src="images/logo.png"
+        class="logo"
+        alt="co-workers logo | #WORKOUTSIDETHEBOX"
+      />
+      <nav id="navigation">
+        <a href="index.html">
+          Home
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h2>All Workspaces</h2>
+        <table id="workspaces" cellpadding="20">
+          <th>Name</th>
+          <th>Type</th>
+          <th>Seating Capacity</th>
+          <th>Availibility</th>
+          <th>Lease Term</th>
+          <th>Price</th>
+          <th>Smoking</th>
+          <th>View</th>
+        </table>
+      </section>
+    </main>
+
+    <footer>
+      &copy; 2020, co-workers.com | Designed & Developed by Nikita
+    </footer>
+    <script>
+      var urlParams = new URLSearchParams(window.location.search);
+      var query = urlParams.get('query').toLowerCase();
+      var filter = urlParams.get('filter');
+
+      var workspaces = JSON.parse(localStorage.getItem('workspaces'));
+
+      if (workspaces) {
+        var myWorkspaces = [];
+        if (filter == 'address') {
+          if (query.length > 0) {
+            var regex = new RegExp(`^${query}.*$`);
+            var adProperties = JSON.parse(localStorage.getItem('properties'));
+
+            var selectedProperties = adProperties.filter(function(property) {
+              if (
+                property.address.toLowerCase().match(regex) !== null &&
+                property.visibility.toString() == 'true'
+              ) {
+                return property;
+              }
+            });
+
+            for (i = 0; i < selectedProperties.length; i++) {
+              arr = workspaces.filter(function(workspace) {
+                if (workspace.propertyId == selectedProperties[i].id) {
+                  return workspace;
+                }
+              });
+              if (arr.length > 0) {
+                for (j = 0; j < arr.length; j++) {
+                  myWorkspaces.push(arr[j]);
+                }
+              }
+            }
+          } else {
+            window.location.href = 'search.html';
+          }
+        } else if (filter == 'neighborhood') {
+          if (query.length > 0) {
+            var regex = new RegExp(`^${query}.*$`);
+            var adProperties = JSON.parse(localStorage.getItem('properties'));
+
+            var selectedProperties = adProperties.filter(function(property) {
+              if (
+                property.neighborhood.toLowerCase().match(regex) !== null &&
+                property.visibility.toString() == 'true'
+              ) {
+                return property;
+              }
+            });
+
+            for (i = 0; i < selectedProperties.length; i++) {
+              arr = workspaces.filter(function(workspace) {
+                if (workspace.propertyId == selectedProperties[i].id) {
+                  return workspace;
+                }
+              });
+              if (arr.length > 0) {
+                for (j = 0; j < arr.length; j++) {
+                  myWorkspaces.push(arr[j]);
+                }
+              }
+            }
+          } else {
+            window.location.href = 'search.html';
+          }
+        } else if (filter == 'sqft') {
+          if (query.length > 0) {
+            var adProperties = JSON.parse(localStorage.getItem('properties'));
+
+            var selectedProperties = adProperties.filter(function(property) {
+              if (
+                property.sqft === query.toString() &&
+                property.visibility.toString() == 'true'
+              ) {
+                return property;
+              }
+            });
+
+            for (i = 0; i < selectedProperties.length; i++) {
+              arr = workspaces.filter(function(workspace) {
+                if (workspace.propertyId == selectedProperties[i].id) {
+                  return workspace;
+                }
+              });
+              if (arr.length > 0) {
+                for (j = 0; j < arr.length; j++) {
+                  myWorkspaces.push(arr[j]);
+                }
+              }
+            }
+          } else {
+            window.location.href = 'search.html';
+          }
+        } else if (filter == 'withParking') {
+          var adProperties = JSON.parse(localStorage.getItem('properties'));
+
+          var selectedProperties = adProperties.filter(function(property) {
+            if (
+              property.parking == true &&
+              property.visibility.toString() == 'true'
+            ) {
+              return property;
+            }
+          });
+
+          for (i = 0; i < selectedProperties.length; i++) {
+            arr = workspaces.filter(function(workspace) {
+              if (workspace.propertyId == selectedProperties[i].id) {
+                return workspace;
+              }
+            });
+            if (arr.length > 0) {
+              for (j = 0; j < arr.length; j++) {
+                myWorkspaces.push(arr[j]);
+              }
+            }
+          }
+        } else if (filter == 'withoutParking') {
+          var adProperties = JSON.parse(localStorage.getItem('properties'));
+
+          var selectedProperties = adProperties.filter(function(property) {
+            if (
+              property.parking != true &&
+              property.visibility.toString() == 'true'
+            ) {
+              return property;
+            }
+          });
+
+          for (i = 0; i < selectedProperties.length; i++) {
+            arr = workspaces.filter(function(workspace) {
+              if (workspace.propertyId == selectedProperties[i].id) {
+                return workspace;
+              }
+            });
+            if (arr.length > 0) {
+              for (j = 0; j < arr.length; j++) {
+                myWorkspaces.push(arr[j]);
+              }
+            }
+          }
+        } else if (filter == 'withTransportation') {
+          var adProperties = JSON.parse(localStorage.getItem('properties'));
+
+          var selectedProperties = adProperties.filter(function(property) {
+            if (
+              property.transportation == true &&
+              property.visibility.toString() == 'true'
+            ) {
+              return property;
+            }
+          });
+
+          for (i = 0; i < selectedProperties.length; i++) {
+            arr = workspaces.filter(function(workspace) {
+              if (workspace.propertyId == selectedProperties[i].id) {
+                return workspace;
+              }
+            });
+            if (arr.length > 0) {
+              for (j = 0; j < arr.length; j++) {
+                myWorkspaces.push(arr[j]);
+              }
+            }
+          }
+        } else if (filter == 'withoutTransportation') {
+          var adProperties = JSON.parse(localStorage.getItem('properties'));
+
+          var selectedProperties = adProperties.filter(function(property) {
+            if (
+              property.transportation != true &&
+              property.visibility.toString() == 'true'
+            ) {
+              return property;
+            }
+          });
+
+          for (i = 0; i < selectedProperties.length; i++) {
+            arr = workspaces.filter(function(workspace) {
+              if (workspace.propertyId == selectedProperties[i].id) {
+                return workspace;
+              }
+            });
+            if (arr.length > 0) {
+              for (j = 0; j < arr.length; j++) {
+                myWorkspaces.push(arr[j]);
+              }
+            }
+          }
+        } else if (filter == 'seating') {
+          if (query.length > 0) {
+            myWorkspaces = workspaces.filter(function(workspace) {
+              if (
+                workspace.seating === query.toString() &&
+                workspace.visibility == true
+              ) {
+                return workspace;
+              }
+            });
+          } else {
+            window.location.href = 'search.html';
+          }
+        } else if (filter == 'withSmoking') {
+          myWorkspaces = workspaces.filter(function(workspace) {
+            if (workspace.smoking === true && workspace.visibility == true) {
+              return workspace;
+            }
+          });
+        } else if (filter == 'withoutSmoking') {
+          myWorkspaces = workspaces.filter(function(workspace) {
+            if (workspace.smoking !== true && workspace.visibility == true) {
+              return workspace;
+            }
+          });
+        } else if (filter == 'availibilityDate') {
+          if (query.length > 0) {
+            myWorkspaces = workspaces.filter(function(workspace) {
+              if (
+                workspace.availibility === query.toString() &&
+                workspace.visibility == true
+              ) {
+                return workspace;
+              }
+            });
+          } else {
+            window.location.href = 'search.html';
+          }
+        } else if (filter == 'leaseTerm') {
+          if (query.length > 0) {
+            myWorkspaces = workspaces.filter(function(workspace) {
+              if (
+                workspace.leaseTerm === query.toString() &&
+                workspace.visibility == true
+              ) {
+                return workspace;
+              }
+            });
+          } else {
+            window.location.href = 'search.html';
+          }
+        } else if (filter == 'price') {
+          if (query.length > 0) {
+            myWorkspaces = workspaces.filter(function(workspace) {
+              if (
+                workspace.price === query.toString() &&
+                workspace.visibility == true
+              ) {
+                return workspace;
+              }
+            });
+          } else {
+            window.location.href = 'search.html';
+          }
+        }
+
+        for (i = 0; i < myWorkspaces.length; i++) {
+          var myWorkspace = myWorkspaces[i];
+          var workspaceTable = document.getElementById('workspaces');
+          var nameText = document.createTextNode(myWorkspace.name);
+          var typeText = document.createTextNode(myWorkspace.type);
+          var seatingText = document.createTextNode(myWorkspace.seating);
+          var availibilityText = document.createTextNode(
+            myWorkspace.availibility
+          );
+
+          var leaseText = document.createTextNode(`
+            ${myWorkspace.leaseTerm} ${myWorkspace.leaseType}${
+            parseInt(myWorkspace.leaseTerm) > 1 ? 's' : ''
+          }`);
+          var priceText = document.createTextNode(myWorkspace.price);
+          var smokingText = document.createTextNode(
+            myWorkspace.smoking ? 'Allowed' : 'Not Allowed'
+          );
+          var nameNode = document.createElement('td');
+          var typeNode = document.createElement('td');
+          var seatingNode = document.createElement('td');
+          var availibilityNode = document.createElement('td');
+          var leaseNode = document.createElement('td');
+          var priceNode = document.createElement('td');
+          var smokingNode = document.createElement('td');
+
+          var row = document.createElement('tr');
+          nameNode.appendChild(nameText);
+          row.appendChild(nameNode);
+          typeNode.appendChild(typeText);
+          row.appendChild(typeNode);
+          seatingNode.appendChild(seatingText);
+          row.appendChild(seatingNode);
+          availibilityNode.appendChild(availibilityText);
+          row.appendChild(availibilityNode);
+          leaseNode.appendChild(leaseText);
+          row.appendChild(leaseNode);
+          priceNode.appendChild(priceText);
+          row.appendChild(priceNode);
+          smokingNode.appendChild(smokingText);
+          row.appendChild(smokingNode);
+
+          var viewLinkNode = document.createElement('td');
+          var viewLink = document.createElement('a');
+          var viewLinkText = document.createTextNode('View Details');
+          viewLink.setAttribute(
+            'href',
+            `workspace.html?workspaceId=${myWorkspace.id}&propertyId=${myWorkspace.propertyId}`
+          );
+          viewLink.appendChild(viewLinkText);
+          viewLinkNode.appendChild(viewLink);
+          row.appendChild(viewLinkNode);
+
+          workspaceTable.appendChild(row);
+        }
+      }
+    </script>
+  </body>
+</html>
